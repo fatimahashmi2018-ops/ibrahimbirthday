@@ -1,16 +1,1046 @@
+
 ---
+const birthdayName = "IBRAHIM";
 ---
 
+<!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#17100d" />
+    <title>Happy 12th Birthday Ibrahim!</title>
+    <meta name="description" content="A special birthday arcade made just for Ibrahim!" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  </head>
+
+  <body>
+    <main class="arcade">
+
+      <div class="topbar">
+        <a class="logo" href="/">IBRAHIM<span>™</span></a>
+        <div class="top-label">THE BIRTHDAY ARCADE</div>
+        <div class="age">LEVEL 12 <span>★</span></div>
+      </div>
+
+      <section class="intro" id="intro">
+        <div class="eyebrow">✦ A SPECIAL MISSION FOR YOU ✦</div>
+
+        <h1>HAPPY BIRTHDAY<br /><span>{birthdayName}!</span></h1>
+
+        <p class="intro-text">
+          You've officially unlocked LEVEL 12.<br />
+          Are you ready for your birthday mission?
+        </p>
+
+        <div class="hero-art">
+          <div class="sun"></div>
+          <div class="planet">12</div>
+          <div class="star star1">✦</div>
+          <div class="star star2">✧</div>
+          <div class="star star3">✦</div>
+          <div class="hero-rocket">🚀</div>
+        </div>
+
+        <div class="mission-card">
+          <div>
+            <span class="small-label">YOUR MISSION</span>
+            <h3>THE MEMORY MASTER</h3>
+            <p>Flip the cards, find all 8 matching pairs, and unlock your birthday surprise!</p>
+          </div>
+          <div class="mission-icon">👾</div>
+        </div>
+
+        <button class="main-button" id="startButton">
+          START MISSION <span>→</span>
+        </button>
+
+        <p class="hint">NO CHEATS. JUST SKILL. GOOD LUCK, IBRAHIM.</p>
+      </section>
+
+      <section class="game hidden" id="game">
+        <div class="game-heading">
+          <div>
+            <div class="eyebrow">CHALLENGE 001</div>
+            <h2>MEMORY MASTER</h2>
+          </div>
+          <div class="score-box">
+            <span>MOVES</span>
+            <strong id="score">00</strong>
+          </div>
+        </div>
+
+        <div class="game-info">
+          <span>🧠 MATCH: <strong id="matches">0</strong>/8</span>
+          <span>⏱ TIME: <strong id="timer">90</strong>s</span>
+        </div>
+
+        <div class="memory-board" id="memoryBoard"></div>
+
+        <div class="game-controls">
+          <p>✨ FIND ALL 8 MATCHING PAIRS!</p>
+          <p>Flip two cards at a time. Remember where the emojis are!</p>
+        </div>
+
+        <div class="progress-track">
+          <div id="progress"></div>
+        </div>
+
+        <button class="secondary-button" id="quitButton">
+          ← BACK TO START
+        </button>
+      </section>
+
+      <section class="result hidden" id="result">
+        <div class="result-icon" id="resultIcon">🏆</div>
+        <div class="eyebrow">MISSION COMPLETE</div>
+        <h2 id="resultTitle">YOU DID IT!</h2>
+        <p id="resultText">The galaxy is safe thanks to you!</p>
+
+        <div class="final-score">
+          <span>YOUR FINAL SCORE</span>
+          <strong id="finalScore">15</strong>
+        </div>
+
+        <button class="main-button" id="surpriseButton">
+          UNLOCK YOUR SURPRISE 🎁
+        </button>
+      </section>
+
+      <section class="surprise hidden" id="surprise">
+        <div class="eyebrow">✦ SECRET LEVEL UNLOCKED ✦</div>
+        <div class="gift">🎁</div>
+        <h2>HAPPY 12TH<br /><span>BIRTHDAY!</span></h2>
+
+        <div class="birthday-card">
+          <div class="cake">🎂</div>
+          <h3>TO OUR AMAZING IBRAHIM</h3>
+          <p>
+            Happy birthday, Ibrahim! You're officially 12!
+            We hope your day is filled with laughter, epic adventures,
+            lots of happiness and everything you love.
+          </p>
+          <p class="wish">Keep being awesome. The world is yours to explore!</p>
+          <div class="signature">WITH LOTS OF LOVE ❤️</div>
+        </div>
+
+        <div class="confetti-text">YOU ARE THE REAL MVP 🏆</div>
+        <button class="secondary-button" id="replayButton">↻ PLAY AGAIN</button>
+      </section>
+
+      <footer>MADE WITH ❤️ FOR IBRAHIM · EST. LEVEL 12</footer>
+    </main>
+
+    <script>
+      // @ts-nocheck
+
+      const intro = document.querySelector("#intro");
+      const game = document.querySelector("#game");
+      const result = document.querySelector("#result");
+      const surprise = document.querySelector("#surprise");
+
+      const startButton = document.querySelector("#startButton");
+      const quitButton = document.querySelector("#quitButton");
+      const surpriseButton = document.querySelector("#surpriseButton");
+      const replayButton = document.querySelector("#replayButton");
+
+      const board = document.querySelector("#memoryBoard");
+      const scoreDisplay = document.querySelector("#score");
+      const matchesDisplay = document.querySelector("#matches");
+      const timerDisplay = document.querySelector("#timer");
+      const progress = document.querySelector("#progress");
+
+      const emojis = [
+        "🚀", "🚀",
+        "🎂", "🎂",
+        "🎮", "🎮",
+        "⭐", "⭐",
+        "🎁", "🎁",
+        "🦖", "🦖",
+        "⚽", "⚽",
+        "🍕", "🍕"
+      ];
+
+      let moves = 0;
+      let matchedPairs = 0;
+      let time = 90;
+      let firstCard = null;
+      let secondCard = null;
+      let locked = false;
+      let finished = false;
+      let timerInterval;
+      let mismatchTimeout;
+
+      function showSection(section) {
+        [intro, game, result, surprise].forEach((item) => {
+          item.classList.add("hidden");
+        });
+
+        section.classList.remove("hidden");
+      }
+
+      function shuffle(array) {
+        const shuffled = [...array];
+
+        for (let i = shuffled.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+
+        return shuffled;
+      }
+
+      function startGame() {
+        clearInterval(timerInterval);
+        clearTimeout(mismatchTimeout);
+
+        moves = 0;
+        matchedPairs = 0;
+        time = 90;
+        firstCard = null;
+        secondCard = null;
+        locked = false;
+        finished = false;
+
+        scoreDisplay.textContent = "00";
+        matchesDisplay.textContent = "0";
+        timerDisplay.textContent = "90";
+        progress.style.width = "0%";
+
+        board.innerHTML = "";
+
+        const shuffledEmojis = shuffle(emojis);
+
+        shuffledEmojis.forEach((emoji) => {
+          const card = document.createElement("button");
+
+          card.className = "memory-card";
+          card.type = "button";
+          card.dataset.emoji = emoji;
+          card.setAttribute("aria-label", "Hidden memory card");
+
+          card.innerHTML = `
+            <span class="card-back">?</span>
+            <span class="card-front">${emoji}</span>
+          `;
+
+          card.addEventListener("click", () => flipCard(card));
+
+          board.appendChild(card);
+        });
+
+        showSection(game);
+
+        timerInterval = setInterval(() => {
+          if (finished) return;
+
+          time--;
+          timerDisplay.textContent = String(time);
+
+          if (time <= 0) {
+            endGame();
+          }
+        }, 1000);
+      }
+
+      function flipCard(card) {
+        if (
+          locked ||
+          finished ||
+          card.classList.contains("flipped") ||
+          card.classList.contains("matched")
+        ) {
+          return;
+        }
+
+        card.classList.add("flipped");
+
+        if (!firstCard) {
+          firstCard = card;
+          return;
+        }
+
+        secondCard = card;
+        moves++;
+
+        scoreDisplay.textContent = String(moves).padStart(2, "0");
+
+        const isMatch = firstCard.dataset.emoji === secondCard.dataset.emoji;
+
+        if (isMatch) {
+          firstCard.classList.add("matched");
+          secondCard.classList.add("matched");
+
+          matchedPairs++;
+          matchesDisplay.textContent = String(matchedPairs);
+          progress.style.width = `${matchedPairs / 8 * 100}%`;
+
+          firstCard = null;
+          secondCard = null;
+
+          if (matchedPairs === 8) {
+            endGame();
+          }
+        } else {
+          locked = true;
+
+          const cardOne = firstCard;
+          const cardTwo = secondCard;
+
+          mismatchTimeout = setTimeout(() => {
+            cardOne.classList.remove("flipped");
+            cardTwo.classList.remove("flipped");
+
+            firstCard = null;
+            secondCard = null;
+            locked = false;
+          }, 850);
+        }
+      }
+
+      function endGame() {
+        if (finished) return;
+
+        finished = true;
+        clearInterval(timerInterval);
+        clearTimeout(mismatchTimeout);
+
+        const won = matchedPairs === 8;
+
+        document.querySelector("#finalScore").textContent = moves;
+
+        document.querySelector("#resultIcon").textContent =
+          won ? "🏆" : "⏰";
+
+        document.querySelector("#resultTitle").textContent =
+          won ? "MEMORY MASTER!" : "TIME'S UP!";
+
+        document.querySelector("#resultText").textContent =
+          won
+            ? "Amazing! You matched every pair. Your birthday surprise is ready!"
+            : `You found ${matchedPairs} out of 8 pairs. Give it another try!`;
+
+        surpriseButton.textContent = won
+          ? "UNLOCK YOUR SURPRISE 🎁"
+          : "TRY AGAIN 🎮";
+
+        showSection(result);
+      }
+
+      function openSurprise() {
+        if (matchedPairs === 8) {
+          showSection(surprise);
+          launchConfetti();
+        } else {
+          startGame();
+        }
+      }
+
+      function launchConfetti() {
+        const colors = ["#ff7417", "#ffd166", "#ff4f64", "#ffffff"];
+
+        for (let i = 0; i < 80; i++) {
+          const piece = document.createElement("div");
+
+          piece.className = "confetti";
+          piece.style.left = Math.random() * 100 + "vw";
+          piece.style.background =
+            colors[Math.floor(Math.random() * colors.length)];
+
+          piece.style.animationDuration =
+            (2 + Math.random() * 3) + "s";
+
+          piece.style.animationDelay =
+            Math.random() * 1.5 + "s";
+
+          document.body.appendChild(piece);
+
+          setTimeout(() => piece.remove(), 6500);
+        }
+      }
+
+      startButton.addEventListener("click", startGame);
+
+      quitButton.addEventListener("click", () => {
+        finished = true;
+        clearInterval(timerInterval);
+        clearTimeout(mismatchTimeout);
+        showSection(intro);
+      });
+
+      surpriseButton.addEventListener("click", openSurprise);
+
+      replayButton.addEventListener("click", () => {
+        clearInterval(timerInterval);
+        showSection(intro);
+      });
+    </script>
+  </body>
 </html>
+
+<style is:global>
+  :root {
+    font-family: "DM Sans", sans-serif;
+    color: #fff4e9;
+    background: #17100d;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    scroll-behavior: smooth;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    min-width: 320px;
+    min-height: 100vh;
+    background:
+      radial-gradient(ellipse at 50% 20%, rgba(255, 116, 23, 0.13), transparent 45%),
+      #17100d;
+    color: #fff4e9;
+  }
+
+  button {
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .arcade {
+    width: min(100% - 36px, 760px);
+    min-height: 100vh;
+    margin: 0 auto;
+    padding: 25px 0 30px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding-bottom: 22px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .logo {
+    color: white;
+    font-family: "Archivo Black", sans-serif;
+    font-size: 17px;
+    text-decoration: none;
+    letter-spacing: -1px;
+  }
+
+  .logo span {
+    color: #ff7417;
+    font-size: 10px;
+    vertical-align: top;
+  }
+
+  .top-label,
+  .age {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+  }
+
+  .top-label {
+    color: #a99a8d;
+  }
+
+  .age {
+    color: #ffb36e;
+  }
+
+  .age span {
+    color: #ff7417;
+  }
+
+  .intro,
+  .game,
+  .result,
+  .surprise {
+    width: 100%;
+    max-width: 580px;
+    margin: 0 auto;
+    text-align: center;
+    animation: appear 0.5s ease both;
+  }
+
+  .intro {
+    padding-top: 60px;
+  }
+
+  .eyebrow {
+    color: #ff9746;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 3px;
+  }
+
+  h1,
+  h2,
+  h3,
+  p {
+    margin-top: 0;
+  }
+
+  h1,
+  h2 {
+    font-family: "Archivo Black", sans-serif;
+    letter-spacing: -2px;
+  }
+
+  h1 {
+    margin: 22px 0 15px;
+    font-size: clamp(39px, 8vw, 68px);
+    line-height: 1.08;
+  }
+
+  h1 span,
+  .surprise h2 span {
+    color: #ff7417;
+  }
+
+  .intro-text {
+    color: #b9aaa0;
+    font-size: 15px;
+    line-height: 1.8;
+  }
+
+  .hero-art {
+    position: relative;
+    width: 100%;
+    height: 190px;
+    margin: 25px auto 15px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 116, 23, 0.15);
+    border-radius: 22px;
+    background:
+      radial-gradient(circle at 50% 70%, rgba(255, 116, 23, 0.22), transparent 40%),
+      linear-gradient(145deg, #302017, #1e1511);
+  }
+
+  .sun {
+    position: absolute;
+    width: 130px;
+    height: 130px;
+    top: 36px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background: linear-gradient(145deg, #ffb34c, #ff7417);
+    box-shadow: 0 0 65px rgba(255, 116, 23, 0.35);
+  }
+
+  .planet {
+    position: absolute;
+    top: 61px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #49230e;
+    font-family: "Archivo Black", sans-serif;
+    font-size: 65px;
+    z-index: 1;
+  }
+
+  .hero-rocket {
+    position: absolute;
+    right: 19%;
+    bottom: 25px;
+    font-size: 48px;
+    transform: rotate(-25deg);
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .star {
+    position: absolute;
+    color: #ffd166;
+    animation: twinkle 2s ease-in-out infinite;
+  }
+
+  .star1 {
+    top: 30px;
+    left: 20%;
+    font-size: 26px;
+  }
+
+  .star2 {
+    top: 60px;
+    right: 20%;
+    font-size: 35px;
+  }
+
+  .star3 {
+    bottom: 25px;
+    left: 27%;
+    font-size: 20px;
+  }
+
+  .mission-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 22px;
+    margin: 20px 0;
+    border: 1px solid rgba(255, 116, 23, 0.25);
+    border-radius: 17px;
+    background: linear-gradient(120deg, #2b1b13, #211711);
+    text-align: left;
+  }
+
+  .small-label {
+    color: #ff9746;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 2px;
+  }
+
+  .mission-card h3 {
+    margin: 7px 0;
+    font-family: "Archivo Black", sans-serif;
+    font-size: 17px;
+  }
+
+  .mission-card p {
+    max-width: 390px;
+    margin: 0;
+    color: #b9aaa0;
+    font-size: 12px;
+    line-height: 1.7;
+  }
+
+  .mission-icon {
+    display: grid;
+    flex-shrink: 0;
+    width: 58px;
+    height: 58px;
+    place-items: center;
+    border-radius: 15px;
+    background: #492715;
+    font-size: 30px;
+  }
+
+  .main-button {
+    width: 100%;
+    padding: 18px 24px;
+    border: 0;
+    border-radius: 12px;
+    background: #ff7417;
+    color: #241209;
+    font-family: "Archivo Black", sans-serif;
+    font-size: 14px;
+    letter-spacing: 1px;
+    box-shadow: 0 5px 0 #a8410b;
+    transition: 0.2s ease;
+  }
+
+  .main-button:hover {
+    transform: translateY(-3px);
+    background: #ff913e;
+    box-shadow: 0 8px 0 #a8410b;
+  }
+
+  .main-button:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #a8410b;
+  }
+
+  .main-button span {
+    margin-left: 10px;
+  }
+
+  .hint {
+    margin-top: 20px;
+    color: #827267;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+  }
+
+  .game {
+    padding-top: 45px;
+  }
+
+  .game-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-align: left;
+  }
+
+  .game-heading h2 {
+    margin: 8px 0 0;
+    font-size: clamp(25px, 6vw, 38px);
+  }
+
+  .score-box {
+    min-width: 75px;
+    padding: 12px;
+    border: 1px solid rgba(255, 116, 23, 0.3);
+    border-radius: 12px;
+    background: #2b1b13;
+    text-align: center;
+  }
+
+  .score-box span,
+  .final-score span {
+    display: block;
+    color: #b9aaa0;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 2px;
+  }
+
+  .score-box strong {
+    display: block;
+    margin-top: 4px;
+    color: #ff9746;
+    font-family: "Archivo Black", sans-serif;
+    font-size: 25px;
+  }
+
+  .game-info {
+    display: flex;
+    justify-content: space-between;
+    margin: 25px 0 15px;
+    padding: 14px;
+    border-radius: 10px;
+    background: #261a14;
+    color: #c6b4a6;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .game-info strong {
+    color: #ff9746;
+  }
+
+  .memory-board {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin: 20px 0;
+  }
+
+  .memory-card {
+    position: relative;
+    min-width: 0;
+    aspect-ratio: 1;
+    overflow: hidden;
+    border: 1px solid #a65e2c;
+    border-radius: 14px;
+    background: linear-gradient(145deg, #ff963e, #d85d16);
+    color: white;
+    font-size: clamp(25px, 7vw, 39px);
+    box-shadow: 0 4px 0 #77380f;
+    transition: transform 0.2s, background 0.2s;
+  }
+
+  .memory-card:hover {
+    transform: translateY(-3px);
+  }
+
+  .memory-card .card-back,
+  .memory-card .card-front {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+
+  .memory-card .card-back {
+    font-family: "Archivo Black", sans-serif;
+    font-size: 35px;
+    color: #3a1b08;
+  }
+
+  .memory-card .card-front {
+    opacity: 0;
+    transform: rotateY(90deg);
+    background: #fff0dc;
+    border-radius: 12px;
+  }
+
+  .memory-card.flipped .card-back,
+  .memory-card.matched .card-back {
+    opacity: 0;
+  }
+
+  .memory-card.flipped .card-front,
+  .memory-card.matched .card-front {
+    opacity: 1;
+    transform: rotateY(0);
+  }
+
+  .memory-card.matched {
+    border-color: #e7b65e;
+    background: #47321e;
+    box-shadow: 0 4px 0 #2b1c10;
+    cursor: default;
+  }
+
+  .memory-card.matched .card-front {
+    background: #ffe0a8;
+  }
+
+  .game-controls {
+    padding: 16px;
+    border: 1px solid rgba(255, 116, 23, 0.2);
+    border-radius: 12px;
+    background: #241912;
+  }
+
+  .game-controls p:first-child {
+    margin-bottom: 6px;
+    color: #ff9746;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1px;
+  }
+
+  .game-controls p:last-child {
+    margin: 0;
+    color: #b9aaa0;
+    font-size: 11px;
+  }
+
+  .progress-track {
+    height: 9px;
+    margin: 22px 0;
+    overflow: hidden;
+    border-radius: 20px;
+    background: #38251a;
+  }
+
+  #progress {
+    width: 0%;
+    height: 100%;
+    border-radius: 20px;
+    background: linear-gradient(90deg, #ff7417, #ffd166);
+    transition: width 0.3s ease;
+  }
+
+  .secondary-button {
+    padding: 13px 20px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 10px;
+    background: transparent;
+    color: #e5d5c9;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    transition: 0.2s;
+  }
+
+  .secondary-button:hover {
+    border-color: #ff7417;
+    color: #ff9746;
+  }
+
+  .result,
+  .surprise {
+    padding-top: 75px;
+  }
+
+  .result-icon,
+  .gift {
+    margin-bottom: 20px;
+    font-size: 65px;
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .result h2,
+  .surprise h2 {
+    margin: 15px 0;
+    font-size: clamp(35px, 8vw, 55px);
+  }
+
+  .result > p {
+    color: #b9aaa0;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  .final-score {
+    width: 180px;
+    margin: 25px auto;
+    padding: 20px;
+    border: 1px solid rgba(255, 116, 23, 0.3);
+    border-radius: 15px;
+    background: #2b1b13;
+  }
+
+  .final-score strong {
+    display: block;
+    margin-top: 8px;
+    color: #ff9746;
+    font-family: "Archivo Black", sans-serif;
+    font-size: 40px;
+  }
+
+  .birthday-card {
+    padding: 30px 25px;
+    margin: 25px 0;
+    border: 1px solid rgba(255, 116, 23, 0.35);
+    border-radius: 20px;
+    background: linear-gradient(145deg, #382218, #211711);
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.2);
+  }
+
+  .cake {
+    margin-bottom: 15px;
+    font-size: 55px;
+  }
+
+  .birthday-card h3 {
+    color: #ffb36e;
+    font-family: "Archivo Black", sans-serif;
+    font-size: 17px;
+  }
+
+  .birthday-card p {
+    color: #d0bfb1;
+    font-size: 13px;
+    line-height: 1.9;
+  }
+
+  .birthday-card .wish {
+    color: #ff9746;
+    font-weight: 700;
+  }
+
+  .signature {
+    margin-top: 25px;
+    color: #ffb36e;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2px;
+  }
+
+  .confetti-text {
+    margin-bottom: 25px;
+    color: #ff9746;
+    font-family: "Archivo Black", sans-serif;
+    font-size: 15px;
+    letter-spacing: 1px;
+  }
+
+  footer {
+    margin-top: auto;
+    padding-top: 55px;
+    color: #74645a;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-align: center;
+  }
+
+  .hidden {
+    display: none !important;
+  }
+
+  .confetti {
+    position: fixed;
+    top: -15px;
+    z-index: 100;
+    width: 9px;
+    height: 15px;
+    pointer-events: none;
+    animation: fall linear forwards;
+  }
+
+  @keyframes appear {
+    from {
+      opacity: 0;
+      transform: translateY(15px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0) rotate(-5deg);
+    }
+    50% {
+      transform: translateY(-10px) rotate(5deg);
+    }
+  }
+
+  @keyframes twinkle {
+    0%, 100% {
+      opacity: 0.5;
+      transform: scale(0.9);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.2);
+    }
+  }
+
+  @keyframes fall {
+    to {
+      transform: translateY(110vh) rotate(720deg);
+      opacity: 0;
+    }
+  }
+
+  @media (max-width: 430px) {
+    .arcade {
+      width: min(100% - 26px, 760px);
+      padding-top: 18px;
+    }
+
+    .top-label {
+      font-size: 8px;
+      letter-spacing: 1px;
+    }
+
+    .intro {
+      padding-top: 45px;
+    }
+
+    .hero-art {
+      height: 160px;
+    }
+
+    .mission-card {
+      padding: 16px;
+    }
+
+    .mission-card h3 {
+      font-size: 14px;
+    }
+
+    .mission-icon {
+      width: 48px;
+      height: 48px;
+      font-size: 25px;
+    }
+
+    .memory-board {
+      gap: 9px;
+    }
+
+    .memory-card {
+      border-radius: 10px;
+    }
+
+    .game-info {
+      font-size: 10px;
+    }
+  }
+</style>
+
+
